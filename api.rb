@@ -1,6 +1,8 @@
 require 'net/http'
 require 'json'
 
+# idea is to define a method_missing which can create on the go methods like 'convert_to_EUR', 'convert_to_MXN'
+
 class CurrencyInfo
     attr_accessor :brl_value
 
