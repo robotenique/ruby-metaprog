@@ -6,27 +6,35 @@ require 'json'
 class Currency
     attr_accessor :brl_value
 
-    @brl_value = 0.0
-    @@valid_currency_c = ['USD', 'CAD', 'EUR', 'AED', 'AFN', 'ALL', 'AMD', 'ARS', 'AUD', 'AZN', 'BAM', 'BDT', 'BGN', 
-                          'BHD', 'BIF', 'BND', 'BOB', 'BRL', 'BWP', 'BYR', 'BZD', 'CDF', 'CHF', 'CLP', 'CNY', 'COP',
-                          'CRC', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD', 'EEK', 'EGP', 'ERN', 'ETB', 'GBP', 'GEL',
-                          'GHS', 'GNF', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'IQD', 'IRR', 'ISK',
-                          'JMD', 'JOD', 'JPY', 'KES', 'KHR', 'KMF', 'KRW', 'KWD', 'KZT', 'LBP', 'LKR', 'LTL', 'LVL',
-                          'LYD', 'MAD', 'MDL', 'MGA', 'MKD', 'MMK', 'MOP', 'MUR', 'MXN', 'MYR', 'MZN', 'NAD', 'NGN',
-                          'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON',
-                          'RSD', 'RUB', 'RWF', 'SAR', 'SDG', 'SEK', 'SGD', 'SOS', 'SYP', 'THB', 'TND', 'TOP', 'TRY',
-                          'TTD', 'TWD', 'TZS', 'UAH', 'UGX', 'UYU', 'UZS', 'VEF', 'VND', 'XAF', 'XOF', 'YER', 'ZAR',
-                          'ZMK']
+    @@valid_currency_c = ['AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 
+                          'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN',
+                          'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'THB',
+                          'TRY', 'USD', 'ZAR']
+    def initialize    
+        @brl_value = 0.0
+    end   
 
     def method_missing(m, *args, &block)
-        puts "Delegating #{m}"
         if m.to_s =~ /^convert_to_(...)$/
-            code = $1
+            code = $1.upcase
+            puts "Trying to convert  to #{code}"
             if @@valid_currency_c.include? code
-                object.send(convert_to, code)
+                send :convert_to, code
+            else
+                puts "Invalid currency code :("
             end
+        else
+            super
         end
     end
+
+   
+=begin     def respond_to_missing?(m, include_private = false)
+        (m.to_s =~ /^convert_to_(...)$/ and @@valid_currency_c.include? $1.upcase) || super
+    end
+=end
+
+
 
     def convert_to(currency)
         url = "https://api.exchangeratesapi.io/latest?base=BRL"
@@ -38,7 +46,10 @@ class Currency
 
 end
 
+## Testing our code
 money = Currency.new()
 money.brl_value = 33.5
-puts money.convert_to("USD")
-money.convert_to_USD
+puts "money.responds_to? :convert_to  == #{money.respond_to? :convert_to}" # Default method
+puts "money.responds_to? :convert_to_PHP == #{money.respond_to? :convert_to_PHP}" # Uppercase currency code
+puts "money.responds_to? :convert_to_jpy == #{money.respond_to? :convert_to_jpy}\n\n" # Lowercase currency code
+puts "money.convert_to_PHP == #{money.convert_to_PHP}"
