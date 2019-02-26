@@ -3,8 +3,22 @@ require 'json'
 
 # idea is to define a method_missing which can create on the go methods like 'convert_to_EUR', 'convert_to_MXN'
 
+def log
+    return [
+        def info m
+            puts 'info: ' + m
+        end,
+        def error m
+            puts 'error: ' + m
+        end
+    ]
+end 
+
 class Currency
     attr_accessor :brl_value
+    
+    # inject definition at runtime
+    log
 
     @@valid_currency_c = ['AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 
                           'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN',
@@ -12,6 +26,8 @@ class Currency
                           'TRY', 'USD', 'ZAR']
     def initialize    
         @brl_value = 0.0
+        info 'hey'
+        error 'err'
     end   
 
     def method_missing(m, *args, &block)
