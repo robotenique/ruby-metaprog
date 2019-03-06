@@ -53,7 +53,7 @@ class Money
         if m.to_s =~ /^to_(...)$/
             code = $1.upcase
             log_debug "Trying to convert from #{@currency} to #{code}"
-            # Verify currency code and 
+            # Verify currency code and forward to handler
             if @@valid_currency_c.include? code.to_sym
                 convert_to code
             else
