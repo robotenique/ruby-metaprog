@@ -60,8 +60,9 @@ class Money
         end
     end
 
-=begin     def respond_to_missing?(m, include_private = false)
-        (m.to_s =~ /^to_(...)$/ and @@valid_currency_c.include? $1.upcase) || super
+=begin
+    def respond_to_missing?(m, include_private = false)
+        (m.to_s =~ /^to_(...)$/ and @@valid_currency_c.include? $1.upcase.to_sym) || super
     end
 =end
 
