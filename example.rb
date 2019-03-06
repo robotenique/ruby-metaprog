@@ -40,7 +40,7 @@ class Money
     # Contructor with value & currency
     def initialize(value = 0.0, currency = :BRL)
         @value = value
-        if @@valid_currency_c.include? code.to_sym
+        if @@valid_currency_c.include? currency.to_sym
             @currency = currency.to_sym
         else
             log_error "Invalid currency #{currency} :("
