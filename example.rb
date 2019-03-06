@@ -40,7 +40,7 @@ class Money
     # Contructor with value & currency
     def initialize(value = 0.0, currency = :BRL)
         @value = value
-        @currency = currency
+        @currency = currency.to_sym
     end
 
     # On missing method
