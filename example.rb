@@ -49,8 +49,8 @@ class Money
 
     # On missing method
     def method_missing(m, *args, &block)
-        # If on the format 'to_XXX'
-        if m.to_s =~ /^to_(...)$/
+        # If on the format 'convert_XXX'
+        if m.to_s =~ /^convert_(...)$/
             code = $1.upcase
             log_debug "Trying to convert from #{@currency} to #{code}"
             # Verify currency code and forward to handler
@@ -66,7 +66,7 @@ class Money
 
 =begin
     def respond_to_missing?(m, include_private = false)
-        (m.to_s =~ /^to_(...)$/ and @@valid_currency_c.include? $1.upcase.to_sym) || super
+        (m.to_s =~ /^convert_(...)$/ and @@valid_currency_c.include? $1.upcase.to_sym) || super
     end
 =end
 
@@ -93,8 +93,8 @@ puts "responds_to tests:"
 puts
 money = Money.new(33.5)
 puts "money.responds_to? :convert_to  == #{money.respond_to? :convert_to}" # Default method
-puts "money.responds_to? :to_PHP == #{money.respond_to? :to_PHP}" # Uppercase currency code
-puts "money.responds_to? :to_jpy == #{money.respond_to? :to_jpy}\n\n" # Lowercase currency code
+puts "money.responds_to? :convert_PHP == #{money.respond_to? :convert_PHP}" # Uppercase currency code
+puts "money.responds_to? :convert_jpy == #{money.respond_to? :convert_jpy}\n\n" # Lowercase currency code
 
 # Money amounts
 brl = Money.new(33.5)
@@ -108,8 +108,8 @@ puts
 puts "brl == #{brl}"
 puts "usd == #{usd}"
 puts
-puts "brl.to_PHP == #{brl.to_PHP}"
+puts "brl.convert_PHP == #{brl.convert_PHP}"
 puts
-puts "usd.to_PHP == #{usd.to_PHP}"
+puts "usd.convert_PHP == #{usd.convert_PHP}"
 puts
-puts "usd.to_jpy == #{usd.to_jpy}"
+puts "usd.convert_jpy == #{usd.convert_jpy}"
